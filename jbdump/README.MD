@@ -7,7 +7,6 @@ Data dupms are:
 
 in the xlsx, one sheet per JB and PAGE is created
 
-##############################################################################################################
 
 DEFAULT:
 ![Alt text](default.png)
