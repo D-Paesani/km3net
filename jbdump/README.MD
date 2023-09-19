@@ -5,4 +5,13 @@ Data dupms are:
 "./dump/xlsx/jb_%s.json"%(timestamp)
 in the xlsx, one sheet per JB and PAGE is created
 
+##############################################################################################################
+
+DEFAULT:
 ![Alt text](default.png)
+
+PRINTONNLY:
+![Alt text](help.png)
+
+HELP:
+![Alt text](printonyl.png)
