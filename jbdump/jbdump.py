@@ -39,7 +39,7 @@ for ii in args.jbs:
             
             if args.dump:
                 os.system(F"mkdir -p ./dump/json/{timstamp}/")
-                jsonpath = F"dump/json/{timstamp}/{shname}_{timstamp}.json"
+                jsonpath = F"dump/json/{timstamp}/{shname}.json"
                 xlsxpath = F"dump/xlsx/jb_{timstamp}.xlsx"
                 with open(jsonpath, 'w') as fdump:
                     print(F"-->  Dumping json to {jsonpath}")
@@ -58,7 +58,7 @@ for ii in args.jbs:
                 pd.options.display.max_columns = 10
                 print(dataf)
                 # print(dataf.head(10000))
-                print(F"################### End parsed data for JB{ii:02d}/{pag}: ###########################################")
+                print(F"################### End parsed data for JB{ii:02d}/{pag} ############################################")
 
 
         except Exception as ee:
