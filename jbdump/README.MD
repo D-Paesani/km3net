@@ -11,7 +11,7 @@ DEFAULT:
 ![Alt text](default.png)
 
 PRINTONNLY:
-![Alt text](help.png)
+![Alt text](printonly.png)
 
 HELP:
-![Alt text](printonyl.png)
+![Alt text](help.png)
