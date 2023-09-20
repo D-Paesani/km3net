@@ -8,11 +8,11 @@ Data dupms are:
 in the xlsx, one sheet per JB and PAGE is created
 
 
+PRINTONLY:
+![Alt text](printonly.png)
+
 DEFAULT:
 ![Alt text](default.png)
-
-PRINTONNLY:
-![Alt text](printonly.png)
 
 HELP:
 ![Alt text](help.png)
