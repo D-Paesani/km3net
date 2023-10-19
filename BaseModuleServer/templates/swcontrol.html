@@ -1,22 +1,21 @@
 <html>
    <body>
-      <form action = "{{ url_for('swcontrol') }}" method = "POST">
+      <form action = "{{ url_for('f_swcontrol') }}" method = "POST">
          <br>
          <br>
          <br>
          <br>
          <br>
-         <p>du <input type = "text" name = "du" value="" /> (enter target DU)</p>
-         <p>sws <input type = "text" name = "sws" value="" /> (enter single-space separated switches to operate)</p> 
-         <p>state <input type = "text" name = "state" value="" /> (enter desired switch state)</p> 
-         <p><input type = "submit" value = "submit" name = "submit" /></p>
+         <br>
+         <p>DU <input type = "text" name = "du" value={{prefilldu}} />     (enter target DU)</p>
+         <p>SW <input type = "text" name = "sws" value={{prefillsws}} />     (enter comma or single-space separated switches to operate)</p> 
+         <p>ST <input type = "text" name = "state" value={{prefillstate}} />     (enter desired switch state)</p> 
+         <p><input type = "submit" value = "WRITE" name = "submit" /></p>
+         <p><input type = "submit" value = "READ" name = "submit" /></p>
          <br>
          {{msg}}
          <br>
          <br>
-         <!-- {{resp}}
-         <br>
-         <br> -->
          <div>
             {{ table | safe }}
          </div>

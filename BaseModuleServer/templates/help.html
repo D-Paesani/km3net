@@ -1,26 +1,25 @@
 <html>
    <body>
-      SERVERINO PER BASE MODULE HELP PAGE
+      <br>
+      <br>
+      BASE MODULE SERVER HELP PAGE
       <br>
       <br>
       <br>
       <br>
-      /help <br>
-      this page
+          <a href="{{ url_for('f_sensors') }}">CLICK HERE</a> for DU Sensors monitoring page
       <br>
       <br>
-      /sensors <br>
-      gui per lettura sensori di singola du selezionata con output in json e tabella
+          <a href="{{ url_for('f_swcontrol') }}">CLICK HERE</a> for Switch Control page (authentication needed)
       <br>
       <br>
-      /dumpsensor/DUID <br>
-      dump in json delle letture per la du DUID
-      <br>
-      <br>
-      /swcontrol <br>
-      gui per controllo switch
+         To dump JSON sensor readings for [DUID] DU use /dumpsensor/[DUID]
       <br>
       <br>
 
+
    </body>
 </html>
+
+
+

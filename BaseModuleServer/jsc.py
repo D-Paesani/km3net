@@ -35,3 +35,6 @@ def read_sensors(du):
 
 def write_switches(du, swn, sws):
     return execandparse(du=du, cmd=F'SWITCH_CONTROL {swn} {sws}', params=swctl_toparse, parser=parse_resp)
+
+def read_switches(du, swn):
+    return execandparse(du=du, cmd=F'SWITCH_CONTROL', params=swctl_toparse, parser=parse_resp)

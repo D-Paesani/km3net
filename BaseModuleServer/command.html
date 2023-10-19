@@ -1,0 +1,17 @@
+<html>
+   <body>
+      <form action = "{{ url_for('result') }}" method = "POST">
+         <p>du <input type = "text" name = "du" /></p>
+         <p>cmd<input type ="text" name = "cmd" /></p>
+         <p>args<input type ="text" name = "args" /></p>
+         <p><input type = "submit" value = "submit" name = "submit" /></p>
+         <br>
+         {{cmdstr or '-'}}
+         <br>
+         <br>
+         <br>
+         <!-- {{resp or '-'}} -->
+         <textarea name="" id="resp"></textarea>
+      </form>
+   </body>
+</html>

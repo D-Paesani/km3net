@@ -1,18 +1,21 @@
 <html>
    <body>
-      <form action = "{{ url_for('sensors') }}" method = "POST">
-            <br>
+      <form action = "{{ url_for('f_sensors') }}" method = "POST">
+         {{datajson}}
          <br>
          <br>
          <br>
          <br>
-         <p>du <input type = "text" name = "du" value="1" /></p>
+         <br>
+         <br>
+         <br>
+         <br>
+         <br>
+         <br>
+         <p>ENTER DU <input type = "text" name = "du" value= {{prefilldu}} /></p>
          <p><input type = "submit" value = "submit" name = "submit" /></p>
          <br>
          {{msg}}
-         <br>
-         <br>
-         {{resp}}
          <br>
          <br>
          <div>
