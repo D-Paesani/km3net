@@ -2,16 +2,23 @@
    <body>
       <form action = "{{ url_for('f_swcontrol') }}" method = "POST">
          <br>
+         *****************************************************************************************************<br>
+         **************************************** BASEMODULE SERVER ****************************************<br>
+         ************************************************* <a href="{{ url_for('f_help') }}">HOME</a> ***********************************************
          <br>
          <br>
          <br>
          <br>
          <br>
-         <p>DU <input type = "text" name = "du" value={{prefilldu}} />     (enter target DU)</p>
-         <p>SW <input type = "text" name = "sws" value={{prefillsws}} />     (enter comma or single-space separated switches to operate)</p> 
-         <p>ST <input type = "text" name = "state" value={{prefillstate}} />     (enter desired switch state)</p> 
-         <p><input type = "submit" value = "WRITE" name = "submit" /></p>
-         <p><input type = "submit" value = "READ" name = "submit" /></p>
+         <p>DU = <input type = "text" name = "du" value={{prefilldu}} />     (enter target DU)</p>
+         <p>SW = <input type = "text" name = "sws" value={{prefillsws}} />     (enter comma or single-space separated switches to operate)</p> 
+         <p>ST = <input type = "text" name = "state" value={{prefillstate}} />     (enter desired switch state)</p> 
+         <p>
+         <br>
+         <pre>
+         <input type = "submit" value = "WRITE" name = "submit" style="background-color:red;color:white"/><input type = "submit" value = "READ" name = "submit" style="background-color:blue;color:white"/>
+         </pre>
+         </p>
          <br>
          {{msg}}
          <br>
@@ -19,6 +26,12 @@
          <div>
             {{ table | safe }}
          </div>
+         <br>
+         <br>
+         <br>
+         <br>
+         *****************************************************************************************************<br>
+         *****************************************************************************************************
       </form>
    </body>
 </html>

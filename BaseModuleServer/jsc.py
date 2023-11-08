@@ -1,16 +1,7 @@
-
-import utils
-import os
+import utils as uu
 import subprocess
 import re
 
-
-command = 'python2 jsendcommand_dummy.py {ip} {args}'
-sensors_toparse = ['5V_I', 'LBL_I', 'DU_I', 'DU_IRTN', 'BPS_V', 'HYDRO_I', 'THEATSINK', 'TBOARD']
-swctl_toparse = ['SWITCHNUM', 'SWITCHSTATE']
-
-def cmd_exec(du, args):
-    return subprocess.check_output(command.format(ip=utils.getbaseip(int(du)), args=args), shell=True).decode('utf-8')
 
 def parse_sensors(sss, param):
     ss = re.search(F'MON_{param}_VALUE = (.*)', sss).group(1).split(' ')
@@ -19,22 +10,37 @@ def parse_sensors(sss, param):
     unit = str(ss[2]).replace(')', '')
     return adc, val, unit
 
-def parse_resp(sss, param):
+def parse_generic(sss, param):
     return re.search(F'{param} = (.*)', sss).group(1)
 
-def execandparse(du, cmd, params, parser):
-    resp = cmd_exec(du=du, args=cmd)
+def execandparse(du, jc):
+    cc = jc.command.format(ip=uu.getbaseip(int(du)), args=jc.cmd)
+    print('--> JSC --> command --> ' +  cc)
+    resp = subprocess.check_output(cc, shell=True).decode('utf-8')
     pp = {}
-    pp["du"] = du
-    for ii in params:
-        pp[ii] = parser(resp, ii)
+    pp['du'] = du
+    for ii in jc.params:
+        pp[ii] = jc.parser(resp, ii)
     return pp
 
-def read_sensors(du):
-    return execandparse(du=du, cmd='SENSOR_VALUES_GETALL', params=sensors_toparse, parser=parse_sensors)
+class jcmd:
+    
+    command = 'python2 jsendcommand_dummy.py {ip} {args}'
+    
+    def __init__(self, cmd, parser, params, index=None):
+        self.cmd = cmd
+        self.parser = parser
+        self.params = params
+        self.index = index
 
-def write_switches(du, swn, sws):
-    return execandparse(du=du, cmd=F'SWITCH_CONTROL {swn} {sws}', params=swctl_toparse, parser=parse_resp)
+    def exec(self, du, opts=None):
+        return execandparse(du, self)
+    
+commands = dict(
+    sensors    = jcmd(cmd='SENSOR_VALUES_GETALL', parser=parse_sensors,   params=['5V_I', 'LBL_I', 'DU_I', 'DU_IRTN', 'BPS_V', 'HYDRO_I', 'THEATSINK', 'TBOARD'], index=['ADC', 'VALUE', 'UNIT']),
+    switch     = jcmd(cmd='SWITCH_CONTROL',       parser=parse_generic,   params=['SWITCHNUM', 'SWITCHSTATE']),
+    rescue     = jcmd(cmd='RESCUE_ENABLE',        parser=parse_generic,   params=['ENABLESTATE']),
+)
 
-def read_switches(du, swn):
-    return execandparse(du=du, cmd=F'SWITCH_CONTROL', params=swctl_toparse, parser=parse_resp)
+#Stato allarmi / rescue enable / alarm flag / alarm reset
+

@@ -1,6 +1,6 @@
 <html>
    <body>
-      <form action = "{{ url_for('f_sensors') }}" method = "POST">
+      <form action = "{{ url_for('f_rescue') }}" method = "POST">
          <br>
          *****************************************************************************************************<br>
          **************************************** BASEMODULE SERVER ****************************************<br>
@@ -8,14 +8,17 @@
          <br>
          <br>
          <br>
-         <p>
-         DU(s) = <input type = "text" name = "du" value= {{prefilldu}} /> (comma or single-space separated)
          <br>
+         <br>
+         <p>DU = <input type = "text" name = "du" value={{prefilldu}} />     (enter target DU)</p>
+         <p>SW = <input type = "text" name = "state" value={{prefillstate}} />     (enter desired autoreset state to write)</p> 
+         <p>
          <br>
          <pre>
-         <input type = "submit" value = "READ" name = "submit" style="background-color:blue;color:white"/>
+         <input type = "submit" value = "WRITE" name = "submit" style="background-color:red;color:white"/><input type = "submit" value = "READ" name = "submit" style="background-color:blue;color:white"/>
          </pre>
          </p>
+         <br>
          {{msg}}
          <br>
          <br>
@@ -26,10 +29,6 @@
          <br>
          <br>
          <br>
-         <br>
-         <br>
-         <br>
-         <br> 
          *****************************************************************************************************<br>
          *****************************************************************************************************
       </form>

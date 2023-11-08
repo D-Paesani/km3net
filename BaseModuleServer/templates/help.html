@@ -2,22 +2,23 @@
    <body>
       <br>
       <br>
-      BASE MODULE SERVER HELP PAGE
+      *****************************************************************************************************<br>
+      **************************************** BASEMODULE SERVER **************************************<br>
+      *****************************************************************************************************
       <br>
       <br>
       <br>
       <br>
-          <a href="{{ url_for('f_sensors') }}">CLICK HERE</a> for DU Sensors monitoring page
+      <h3>&#x2022; <a href=  "{{ url_for('f_sensors') }}">  Sensor monitor</a></h3>
+      <h3>&#x2022; <a href="{{ url_for('f_swcontrol') }}">  Switch control</a> (authentication needed)</h3>
+      <h3>&#x2022; <a href="{{ url_for('f_rescue') }}">  Rescue control</a> (authentication needed)</h3>
+      <h3>&#x2022; To dump JSON sensor readings for DU with id [xx] use /dumpsensor/[xx]</h3>
       <br>
       <br>
-          <a href="{{ url_for('f_swcontrol') }}">CLICK HERE</a> for Switch Control page (authentication needed)
       <br>
       <br>
-         To dump JSON sensor readings for [DUID] DU use /dumpsensor/[DUID]
-      <br>
-      <br>
-
-
+      *****************************************************************************************************<br>
+      *****************************************************************************************************
    </body>
 </html>
 

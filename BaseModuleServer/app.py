@@ -1,102 +1,145 @@
 
 from flask import Flask, Response, request, render_template, abort
+from flask_debugtoolbar import DebugToolbarExtension
 import jsc
-import utils
+import utils as uu
 import pandas as pd
+import time
+import sys
 
 app = Flask(__name__)
 
+app.debug = True
+app.config['SECRET_KEY'] = 'pyrosoma'
+app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
+app.config['DEBUG_TB_PROFILER_ENABLED'] = True
+app.config['DEBUG_TB_TEMPLATE_EDITOR_ENABLED'] = True
+
+toolbar = DebugToolbarExtension(app)
+
 if __name__ == '__main__':
-    app.run(debug=True)    
+    with open('sto.log', 'w') as sys.stdout:
+        # app.run(host='0.0.0.0', port=80, debug=True)
+        app.run()    
     
 @app.route('/help', methods = ['GET'])
+@app.route('/', methods = ['GET'])
 def f_help(): 
     return render_template('help.html')
-    
-@app.route('/sensors', methods = ['GET', 'POST'])
-def f_sensors(): 
-    templ = 'sensors.html'
-    lastdu = 1
-    du, resp = None, None
 
-    if request.method == 'POST':
-        try:
-            du = int(request.form.get('du'))
-            resp = jsc.read_sensors(int(du))
-        except: 
-            pass
-    
-        if None in [du, resp]:
-            msg = 'Error reading DU'
-            datajson = ''
-            table = ''
-        else:
-            lastdu = du
-            msg = F'Reading sensors from DU {du}'
-            datajson = resp.copy()
-            resp.pop('du')
-            table = pd.DataFrame(resp, columns=[ii for ii in resp], index=['ADC', 'VALUE', 'UNIT'])
-            table = table.to_html(index=True)
-            
-    elif request.method == 'GET':
-        datajson = ''
-        table = ''
-        msg = 'Waiting for user input'
-        
-    return render_template(templ, datajson=datajson, msg=msg, table=table, prefilldu=lastdu)
+# @app.route('/sto')
+# def stream():
+#     def generate():
+#         with open('sto.log') as f:
+#             while True:
+#                 yield f.read()
+#                 # time.sleep(1)
+#     return app.response_class(generate(), mimetype='text/plain')
 
 @app.route('/dumpsensor/<duid>', methods = ['GET'])
 def f_dumpsensor(duid):
     resp = {}
     try:
-        resp = jsc.read_sensors(int(duid)) 
+        resp = jsc.commands['sensors'].exec(int(duid))
     except:
         abort(404)
     return resp
-        
-@app.route('/swcontrol', methods = ['GET', 'POST'])
-def f_swcontrol(): 
-    templ = 'swcontrol.html'
-    lastdu, laststate, lastsws = 1, 1, '1'
-    du, resp = None, None
-    dd = pd.DataFrame()
+    
+@app.route('/sensors', methods = ['GET', 'POST'])
+def f_sensors(): 
+    templ = dict(name='sensors.html', prefilldu='1', table='') 
+    dd, ddt = [], []
     
     if request.method == 'POST':
         
         try:
-            du = int(request.form.get('du'))
+            du, templ['prefilldu'] = uu.parsestrlist(request.form.get('du'), typ=int)
         except:
-            return render_template(templ, msg='Error retrieving DU number', table='', prefilldu=lastdu, prefillsws=lastsws, prefillstate=laststate)
-        lastdu = du
+            return uu.gettemplate(templ, msg='Error retrieving DU list') 
+        
+        for ii in du:
+            try: 
+                resp = jsc.commands['sensors'].exec(ii)
+                ddt.append(int(resp['du']))
+                resp.pop("du")
+                dd.append(pd.DataFrame(resp, columns=[ii for ii in resp], index=jsc.commands['sensors'].index))
+            except:
+                return uu.gettemplate(templ, msg=F'Error reading DU {ii}') 
+        templ['table'] = '\n\n\n'.join(['<br>' + '-'*50 + F'   DU{ddt[iii]:04d}   ' + '-'*50 + dd[iii].to_html(index=True) for iii in range(len(dd))])
+        return uu.gettemplate(templ, msg=F'Reading sensors on DU={du} with response:')    
+       
+    else:
+        return uu.gettemplate(templ, msg=F'Waiting for user input')
+    
+@app.route('/swcontrol', methods = ['GET', 'POST'])
+def f_swcontrol(): 
+    templ = dict(name='swcontrol.html', table='', datajson='', prefilldu='1', prefillsws=1, prefillstate=1) 
+    dd = pd.DataFrame()
+    state = 2
+    
+    if request.method == 'POST':
         
         try:
-            sws = [int(ii) for ii in request.form.get('sws').replace(' ', ',').split(',')]
+            du = templ['prefilldu'] = int(request.form.get('du'))
         except:
-            return render_template(templ, msg='Error retrieving SW list', table='', prefilldu=lastdu, prefillsws=lastsws, prefillstate=laststate) 
-        lastsws = request.form.get('sws').replace(' ', ',')
-        
+            return uu.gettemplate(templ, msg='Error retrieving DU') 
+        try:
+            sws, templ['prefillsws'] = uu.parsestrlist(request.form.get('sws'), typ=int)
+        except:
+            return uu.gettemplate(templ, msg='Error retrieving SW') 
         if request.form['submit'] == 'WRITE':
-            writem, action = True, 'WRITING to'
             try:
-                state = int(request.form.get('state'))
+                state =  templ['prefillstate'] = int(request.form.get('state'))
             except:
-                return render_template(templ, msg='Error retrieving STATE value', table='', prefilldu=lastdu, prefillsws=lastsws, prefillstate=laststate)
-            laststate = state
-        else:
-            writem, action = False, 'READING'
+                return uu.gettemplate(templ, msg='Error retrieving STATE value')
             
         for ii in sws:
             try: 
-                resp = jsc.write_switches(du,ii,state) if writem else jsc.read_switches(du,ii)
+                resp = jsc.commands['switch'].exec(du)
                 resp.pop('du')
                 resp['switch'] = ii
                 dd = pd.concat([dd, pd.DataFrame(resp, index=[''])])
+                templ['table'] = dd.to_html(index=False)
             except:
-                return render_template(templ, msg=F'Error {("writing to" if writem else "reading").lower()} SW {ii} ', table='', prefilldu=lastdu, prefillsws=lastsws, prefillstate=laststate)  
+                return uu.gettemplate(templ, msg=F'Error {("writing to" if state<2 else "reading").lower()} SW {ii} ')  
                          
-            msg = F'{action} switch{"es" if len(sws) > 1 else ""} {sws} on DU {du} to with response:'
-        return render_template(templ, msg=msg, table=dd.to_html(index=False), prefilldu=lastdu, prefillsws=lastsws, prefillstate=laststate)
+        msg = F'{"Writing" if state<2 else "Reading"} DU{du:04d} switch{"es" if len(sws) > 1 else ""} {sws} {F"to STATE={state}" if state<2 else ""} with response:'
+        return uu.gettemplate(templ, msg)
                     
     else:
+        return uu.gettemplate(templ, msg='Waiting for user input')
+
+
+@app.route('/rescue', methods = ['GET', 'POST'])
+def f_rescue(): 
+    templ = dict(name='rescue.html', table='', datajson='', prefilldu='1', prefillstate=1) 
+    dd = pd.DataFrame()
+    state = 2
+     
+    if request.method == 'POST':
         
-        return render_template(templ, msg='Waiting for user input', table='', prefilldu=lastdu, prefillsws=lastsws, prefillstate=laststate)
+        try:
+            du = templ['prefilldu'] = int(request.form.get('du'))
+        except:
+            return uu.gettemplate(templ, msg='Error retrieving DU') 
+            
+        if request.form['submit'] == 'WRITE':
+            try:
+                state =  templ['prefillstate'] = int(request.form.get('state'))
+            except:
+                return uu.gettemplate(templ, msg='Error retrieving STATE value')
+            
+        try: 
+            resp = jsc.commands['rescue'].exec(du)
+            resp.pop('du')
+            dd = pd.concat([dd, pd.DataFrame(resp, index=[''])])
+            templ['table'] = dd.to_html(index=False)
+        except:
+            return uu.gettemplate(templ, msg=F'Error {("writing" if state<2 else "reading").lower()}') 
+                         
+        msg = F'{"Writing" if state<2 else "Reading"} DU{du:04d} rescue enable {F"to STATE={state}" if state<2 else ""} with response:'
+        return uu.gettemplate(templ, msg)
+                    
+    else:
+        return uu.gettemplate(templ, msg='Waiting for user input')
+
