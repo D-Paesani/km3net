@@ -1,8 +1,16 @@
 import utils as uu
 import subprocess
 import re
+from datetime import datetime
+import json
 
-
+def cmdlogger(cmd, user='?', msg='-', logfile = "./logs/jsccmd.log", enable=True):
+    if not enable: return
+    with open(logfile, 'a') as outfile:
+        outfile.write(datetime.utcnow().strftime('%Y/%m/%d %H:%M:%S')+'\n')
+        for ii, iii in zip(['CMD','USR','MSG'],[cmd, user, msg]):
+            outfile.write(F'{" "*4}{ii} = {iii}\n')
+            
 def parse_sensors(sss, param):
     ss = re.search(F'MON_{param}_VALUE = (.*)', sss).group(1).split(' ')
     adc = int(ss[0])
@@ -21,20 +29,23 @@ def execandparse(du, jc):
     pp['du'] = du
     for ii in jc.params:
         pp[ii] = jc.parser(resp, ii)
-    return pp
+    return pp, cc
 
 class jcmd:
     
     command = 'python2 jsendcommand_dummy.py {ip} {args}'
     
-    def __init__(self, cmd, parser, params, index=None):
+    def __init__(self, cmd, parser, params, index=None, loggeron=True):
         self.cmd = cmd
         self.parser = parser
         self.params = params
         self.index = index
+        self.logen = loggeron
 
     def exec(self, du, opts=None):
-        return execandparse(du, self)
+        pp, cc = execandparse(du, self)
+        cmdlogger(cmd=cc, user='?', msg=F'du{du}', enable=self.logen)
+        return pp
     
 commands = dict(
     sensors    = jcmd(cmd='SENSOR_VALUES_GETALL', parser=parse_sensors,   params=['5V_I', 'LBL_I', 'DU_I', 'DU_IRTN', 'BPS_V', 'HYDRO_I', 'THEATSINK', 'TBOARD'], index=['ADC', 'VALUE', 'UNIT']),
