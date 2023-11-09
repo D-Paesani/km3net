@@ -18,23 +18,21 @@ app.config['DEBUG_TB_TEMPLATE_EDITOR_ENABLED'] = True
 toolbar = DebugToolbarExtension(app)
 
 if __name__ == '__main__':
-    with open('sto.log', 'w') as sys.stdout:
-        # app.run(host='0.0.0.0', port=80, debug=True)
-        app.run()    
+    app.run()    
     
 @app.route('/help', methods = ['GET'])
 @app.route('/', methods = ['GET'])
 def f_help(): 
     return render_template('help.html')
 
-# @app.route('/sto')
-# def stream():
-#     def generate():
-#         with open('sto.log') as f:
-#             while True:
-#                 yield f.read()
-#                 # time.sleep(1)
-#     return app.response_class(generate(), mimetype='text/plain')
+@app.route('/cmdlog')
+def f_showcmdlog():
+    def generate():
+        with open(jsc.cmdlogfile) as f:
+            while True:
+                yield f.read()
+                # time.sleep(1)
+    return app.response_class(generate(), mimetype='text/plain')
 
 @app.route('/dumpsensor/<duid>', methods = ['GET'])
 def f_dumpsensor(duid):
