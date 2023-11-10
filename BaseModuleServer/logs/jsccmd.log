@@ -1,0 +1,445 @@
+
+TIM = 2023/11/09 16:59:02
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:02
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:02
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:02
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:02
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:02
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:02
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:02
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 16:59:03
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:00:57
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SENSOR_VALUES_GETALL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:00:57
+CMD = python2 jsendcommand_dummy.py 10.1.2.100 SENSOR_VALUES_GETALL
+OPT = du2
+USR = ?
+
+TIM = 2023/11/09 17:00:57
+CMD = python2 jsendcommand_dummy.py 10.1.3.100 SENSOR_VALUES_GETALL
+OPT = du3
+USR = ?
+
+TIM = 2023/11/09 17:00:57
+CMD = python2 jsendcommand_dummy.py 10.1.4.100 SENSOR_VALUES_GETALL
+OPT = du4
+USR = ?
+
+TIM = 2023/11/09 17:00:58
+CMD = python2 jsendcommand_dummy.py 10.1.5.100 SENSOR_VALUES_GETALL
+OPT = du5
+USR = ?
+
+TIM = 2023/11/09 17:00:58
+CMD = python2 jsendcommand_dummy.py 10.1.6.100 SENSOR_VALUES_GETALL
+OPT = du6
+USR = ?
+
+TIM = 2023/11/09 17:01:07
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SENSOR_VALUES_GETALL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:01:07
+CMD = python2 jsendcommand_dummy.py 10.1.2.100 SENSOR_VALUES_GETALL
+OPT = du2
+USR = ?
+
+TIM = 2023/11/09 17:01:07
+CMD = python2 jsendcommand_dummy.py 10.1.3.100 SENSOR_VALUES_GETALL
+OPT = du3
+USR = ?
+
+TIM = 2023/11/09 17:01:07
+CMD = python2 jsendcommand_dummy.py 10.1.4.100 SENSOR_VALUES_GETALL
+OPT = du4
+USR = ?
+
+TIM = 2023/11/09 17:01:18
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SENSOR_VALUES_GETALL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:01:18
+CMD = python2 jsendcommand_dummy.py 10.1.2.100 SENSOR_VALUES_GETALL
+OPT = du2
+USR = ?
+
+TIM = 2023/11/09 17:01:18
+CMD = python2 jsendcommand_dummy.py 10.1.3.100 SENSOR_VALUES_GETALL
+OPT = du3
+USR = ?
+
+TIM = 2023/11/09 17:01:18
+CMD = python2 jsendcommand_dummy.py 10.1.4.100 SENSOR_VALUES_GETALL
+OPT = du4
+USR = ?
+
+TIM = 2023/11/09 17:01:24
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SENSOR_VALUES_GETALL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:01:24
+CMD = python2 jsendcommand_dummy.py 10.1.2.100 SENSOR_VALUES_GETALL
+OPT = du2
+USR = ?
+
+TIM = 2023/11/09 17:01:24
+CMD = python2 jsendcommand_dummy.py 10.1.3.100 SENSOR_VALUES_GETALL
+OPT = du3
+USR = ?
+
+TIM = 2023/11/09 17:01:29
+CMD = python2 jsendcommand_dummy.py 10.2.11.100 SENSOR_VALUES_GETALL
+OPT = du11
+USR = ?
+
+TIM = 2023/11/09 17:01:29
+CMD = python2 jsendcommand_dummy.py 10.2.12.100 SENSOR_VALUES_GETALL
+OPT = du12
+USR = ?
+
+TIM = 2023/11/09 17:01:29
+CMD = python2 jsendcommand_dummy.py 10.2.13.100 SENSOR_VALUES_GETALL
+OPT = du13
+USR = ?
+
+TIM = 2023/11/09 17:01:42
+CMD = python2 jsendcommand_dummy.py 10.2.11.100 SENSOR_VALUES_GETALL
+OPT = du11
+USR = ?
+
+TIM = 2023/11/09 17:01:42
+CMD = python2 jsendcommand_dummy.py 10.2.12.100 SENSOR_VALUES_GETALL
+OPT = du12
+USR = ?
+
+TIM = 2023/11/09 17:01:42
+CMD = python2 jsendcommand_dummy.py 10.2.13.100 SENSOR_VALUES_GETALL
+OPT = du13
+USR = ?
+
+TIM = 2023/11/09 17:02:28
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:02:28
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:02:43
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:02:43
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:02:56
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:02:56
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:03:04
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 RESCUE_ENABLE
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:03:18
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 RESCUE_ENABLE
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:03:46
+CMD = python2 jsendcommand_dummy.py 10.2.12.100 SENSOR_VALUES_GETALL
+OPT = du12
+USR = ?
+
+TIM = 2023/11/09 17:04:19
+CMD = python2 jsendcommand_dummy.py 10.2.12.100 SENSOR_VALUES_GETALL
+OPT = du12
+USR = ?
+
+TIM = 2023/11/09 17:04:26
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:04:26
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:04:33
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 RESCUE_ENABLE
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:04:47
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:04:59
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:04:59
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:04:59
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:04:59
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:04:59
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:04:59
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:04:59
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:04:59
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:04:59
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:04:59
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:05:16
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 RESCUE_ENABLE
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:05:25
+CMD = python2 jsendcommand_dummy.py 10.2.12.100 SENSOR_VALUES_GETALL
+OPT = du12
+USR = ?
+
+TIM = 2023/11/09 17:05:25
+CMD = python2 jsendcommand_dummy.py 10.2.15.100 SENSOR_VALUES_GETALL
+OPT = du15
+USR = ?
+
+TIM = 2023/11/09 17:05:32
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:05:32
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:07:34
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/09 17:07:34
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/10 11:15:44
+CMD = python2 jsendcommand_dummy.py 10.2.12.100 SENSOR_VALUES_GETALL
+OPT = du12
+USR = ?
+
+TIM = 2023/11/10 11:20:17
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 RESCUE_ENABLE
+OPT = du1
+USR = ?
+
+TIM = 2023/11/10 11:20:28
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/10 11:20:28
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/10 11:20:28
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/10 11:20:28
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/10 11:21:36
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/10 11:21:36
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/10 11:21:36
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?
+
+TIM = 2023/11/10 11:21:36
+CMD = python2 jsendcommand_dummy.py 10.1.1.100 SWITCH_CONTROL
+OPT = du1
+USR = ?

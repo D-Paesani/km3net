@@ -9,9 +9,10 @@ cmdlogfile =  "./logs/jsccmd.log"
 def cmdlogger(cmd, user='?', msg='-', logfile=cmdlogfile, enable=True):
     if not enable: return
     with open(logfile, 'a') as outfile:
-        outfile.write(datetime.utcnow().strftime('%Y/%m/%d %H:%M:%S')+'\n')
-        for ii, iii in zip(['CMD','USR','OPT'],[cmd, user, msg]):
-            outfile.write(F'{" "*4}{ii} = {iii}\n')
+        outfile.write('\n')
+        for ii, iii in zip(['TIM','CMD','OPT','USR'],[datetime.utcnow().strftime('%Y/%m/%d %H:%M:%S'),cmd, msg, user]):
+            # outfile.write(F'{" "*4 if ii != "TIM" else "--> "}{ii} = {iii}\n')
+            outfile.write(F'{ii} = {iii}\n')
             
 def parse_sensors(sss, param):
     ss = re.search(F'MON_{param}_VALUE = (.*)', sss).group(1).split(' ')
