@@ -7,6 +7,10 @@ import pandas as pd
 import time
 import sys
 
+def gettemplate(templ, msg=None):
+    if msg != None: templ['msg'] = msg
+    return render_template(templ['name'], **templ)
+
 app = Flask(__name__)
 
 app.debug = True
@@ -18,7 +22,8 @@ app.config['DEBUG_TB_TEMPLATE_EDITOR_ENABLED'] = True
 toolbar = DebugToolbarExtension(app)
 
 if __name__ == '__main__':
-    app.run()    
+    #    app.run(host='0.0.0.0',port=5001)
+    app.run()
     
 @app.route('/help', methods = ['GET'])
 @app.route('/', methods = ['GET'])
@@ -53,7 +58,7 @@ def f_sensors():
         try:
             du, templ['prefilldu'] = uu.parsestrlist(request.form.get('du'), typ=int)
         except:
-            return uu.gettemplate(templ, msg='Error retrieving DU list') 
+            return gettemplate(templ, msg='Error retrieving DU list') 
         
         for ii in du:
             try: 
@@ -62,12 +67,12 @@ def f_sensors():
                 resp.pop("du")
                 dd.append(pd.DataFrame(resp, columns=[ii for ii in resp], index=jsc.commands['sensors'].index))
             except:
-                return uu.gettemplate(templ, msg=F'Error reading DU {ii}') 
+                return gettemplate(templ, msg=F'Error reading DU {ii}') 
         templ['table'] = '\n\n\n'.join(['<br>' + '-'*50 + F'   DU{ddt[iii]:04d}   ' + '-'*50 + dd[iii].to_html(index=True) for iii in range(len(dd))])
-        return uu.gettemplate(templ, msg=F'Reading sensors on DU={du} with response:')    
+        return gettemplate(templ, msg=F'Reading sensors on DU={du} with response:')    
        
     else:
-        return uu.gettemplate(templ, msg=F'Waiting for user input')
+        return gettemplate(templ, msg=F'Waiting for user input')
     
 @app.route('/swcontrol', methods = ['GET', 'POST'])
 def f_swcontrol(): 
@@ -80,16 +85,16 @@ def f_swcontrol():
         try:
             du = templ['prefilldu'] = int(request.form.get('du'))
         except:
-            return uu.gettemplate(templ, msg='Error retrieving DU') 
+            return gettemplate(templ, msg='Error retrieving DU') 
         try:
             sws, templ['prefillsws'] = uu.parsestrlist(request.form.get('sws'), typ=int)
         except:
-            return uu.gettemplate(templ, msg='Error retrieving SW') 
+            return gettemplate(templ, msg='Error retrieving SW') 
         if request.form['submit'] == 'WRITE':
             try:
                 state =  templ['prefillstate'] = int(request.form.get('state'))
             except:
-                return uu.gettemplate(templ, msg='Error retrieving STATE value')
+                return gettemplate(templ, msg='Error retrieving STATE value')
             
         for ii in sws:
             try: 
@@ -99,13 +104,13 @@ def f_swcontrol():
                 dd = pd.concat([dd, pd.DataFrame(resp, index=[''])])
                 templ['table'] = dd.to_html(index=False)
             except:
-                return uu.gettemplate(templ, msg=F'Error {("writing to" if state<2 else "reading").lower()} SW {ii} ')  
+                return gettemplate(templ, msg=F'Error {("writing to" if state<2 else "reading").lower()} SW {ii} ')  
                          
-        msg = F'{"Writing" if state<2 else "Reading"} DU{du:04d} switch{"es" if len(sws) > 1 else ""} {sws} {F"to STATE={state}" if state<2 else ""} with response:'
-        return uu.gettemplate(templ, msg)
+        msg = F'{"Writing to" if state<2 else "Reading"} DU{du:04d} switch{"es" if len(sws) > 1 else ""} {sws} {F"to STATE={state}" if state<2 else ""} with response:'
+        return gettemplate(templ, msg)
                     
     else:
-        return uu.gettemplate(templ, msg='Waiting for user input')
+        return gettemplate(templ, msg='Waiting for user input')
 
 
 @app.route('/rescue', methods = ['GET', 'POST'])
@@ -119,13 +124,13 @@ def f_rescue():
         try:
             du = templ['prefilldu'] = int(request.form.get('du'))
         except:
-            return uu.gettemplate(templ, msg='Error retrieving DU') 
+            return gettemplate(templ, msg='Error retrieving DU') 
             
         if request.form['submit'] == 'WRITE':
             try:
                 state =  templ['prefillstate'] = int(request.form.get('state'))
             except:
-                return uu.gettemplate(templ, msg='Error retrieving STATE value')
+                return gettemplate(templ, msg='Error retrieving STATE value')
             
         try: 
             resp = jsc.commands['rescue'].exec(du)
@@ -133,11 +138,11 @@ def f_rescue():
             dd = pd.concat([dd, pd.DataFrame(resp, index=[''])])
             templ['table'] = dd.to_html(index=False)
         except:
-            return uu.gettemplate(templ, msg=F'Error {("writing" if state<2 else "reading").lower()}') 
+            return gettemplate(templ, msg=F'Error {("writing" if state<2 else "reading").lower()}') 
                          
         msg = F'{"Writing" if state<2 else "Reading"} DU{du:04d} rescue enable {F"to STATE={state}" if state<2 else ""} with response:'
-        return uu.gettemplate(templ, msg)
+        return gettemplate(templ, msg)
                     
     else:
-        return uu.gettemplate(templ, msg='Waiting for user input')
+        return gettemplate(templ, msg='Waiting for user input')
 

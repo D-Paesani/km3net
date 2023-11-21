@@ -15,10 +15,6 @@ def parsestrlist(ss, typ=str):
 
 
 
-from flask import Flask, Response, request, render_template, abort
 
-def gettemplate(templ, msg=None):
-    if msg != None: templ['msg'] = msg
-    return render_template(templ['name'], **templ)
 
 

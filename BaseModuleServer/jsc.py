@@ -5,6 +5,8 @@ from datetime import datetime
 import json
 
 cmdlogfile =  "./logs/jsccmd.log"
+commandformatdef = 'python2 jsendcommand_dummy.py {ip} {args}'
+commandformatdef = 'python3 jsendcommand_dummy_3.py {ip} {args}'
 
 def cmdlogger(cmd, user='?', msg='-', logfile=cmdlogfile, enable=True):
     if not enable: return
@@ -36,7 +38,7 @@ def execandparse(du, jc):
 
 class jcmd:
     
-    command = 'python2 jsendcommand_dummy.py {ip} {args}'
+    command = commandformatdef
     
     def __init__(self, cmd, parser, params, index=None, loggeron=True):
         self.cmd = cmd
