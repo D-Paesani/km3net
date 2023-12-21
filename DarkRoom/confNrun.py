@@ -1,5 +1,3 @@
-#daniele.paesani@lns.infn.it
-
 import os
 import argparse
 
@@ -15,21 +13,28 @@ parser.add_argument('--dorun',           type=int,   default=0)
 
 args = parser.parse_args()
 
+print('loading env')
+os.system('module load jpp/17.0.0-rc.1')
+
 for ii in args.getruns:
+    print('getting run ', ii)
     os.system(F'rsync -ah --progress /sps/km3net/users/smastroi/caserta/D2DU100CE/KM3NeT_00000168_00000{ii}.root ./runs/')
 
-with open('run_list.txt', 'w') as fff:
+if args.runtot != [] and args.runlaser != []:
+    with open('run_list.txt', 'w') as fff:
+        print('creating runlist')
+        fff.write('\n')
+        fff.writelines([F'\n{runformat%str(ii)} tot {args.conftot}' for ii in args.runtot])
+        fff.write('\n')
+        fff.writelines([F'\n{runformat%str(ii)} laser {args.conflaser}' for ii in args.runlaser])
 
-    fff.write('\n')
-    fff.writelines([F'\n{runformat%str(ii)} tot {args.conftot}' for ii in args.runtot])
-    fff.write('\n')
-    fff.writelines([F'\n{runformat%str(ii)} laser {args.conflaser}' for ii in args.runlaser])
-
-    os.system('sh get_runs.sh')
+        print('getting runs')
+        os.system('sh get_runs.sh')
 
 if args.dorun:
     
     os.system('module load jpp/17.0.0-rc.1')
+    os.system('sh get_runs.sh')
     
     os.chdir('tot')
     os.system('pwd')
