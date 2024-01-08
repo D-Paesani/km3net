@@ -12,8 +12,8 @@ colorz = [kBlack, kBlue, kMagenta, kRed, kGreen]
 plotout = './giovanna/%s.pdf'
 
 diffs =  np.zeros(18)
-medie = np.zeros((18,len(runs)))
-diffinterdom = np.zeros((18-1, len(runs)))
+medie, errmedie = np.zeros((18,len(runs))), np.zeros((18,len(runs)))
+diffinterdom, errdiffinterdom = np.zeros((18-1, len(runs))), np.zeros((18-1, len(runs)))
 
 runstag = '_'.join([str(ii[1]) for ii in runs])
 
@@ -26,8 +26,9 @@ for ii, rr in enumerate(runs):
     infile = TFile(fname)
     histos, fitpars, graphs = pparser.parsefile(infile, runs[ii])
     
-    medie[:,ii] = fitpars[:,0]
-    diffinterdom[:,ii] =  medie[1:,ii] - medie[:-1,ii]
+    medie[:,ii], errmedie[:,ii] = fitpars[:,0], fitpars[:,2]
+    diffinterdom[:,ii] = medie[1:,ii] - medie[:-1,ii]
+    errdiffinterdom[:,ii] = (errmedie[1:,ii]**2 + errmedie[:-1,ii]**2)**0.5
             
     gmean = graphs[0]
     gmean.SetNameTitle('mean__'+tag, tag)
@@ -36,7 +37,7 @@ for ii, rr in enumerate(runs):
     gmean.GetXaxis().SetTitle('dom #')
     gmeans.append(gmean)
     
-    gdiff = TGraphErrors(17, np.array(np.arange(1,18),dtype=float), np.array(diffinterdom[:,ii],dtype=float), np.array(np.zeros(17),dtype=float), np.array(np.zeros(17),dtype=float)) #aggiungere errori y
+    gdiff = TGraphErrors(17, np.array(np.arange(1,18),dtype=float), np.array(diffinterdom[:,ii],dtype=float), np.array(np.zeros(17),dtype=float), np.array(errdiffinterdom,dtype=float))
     gdiff.SetNameTitle('diff__'+tag, tag)
     gdiff.GetYaxis().SetRangeUser(-210,-190)    
     gdiff.GetYaxis().SetTitle('interdom dt [ns]')
@@ -47,11 +48,11 @@ for ii, rr in enumerate(runs):
     for ll in range(18):
         print(F'dom {ll:02} ---> {fitpars[ll][0]:.3f} +- {fitpars[ll][2]:.3f} [ns]')
     
-    print(F'################################ differenze DOM_(ii+1)-DOM_(ii) run{rr} [ns]:')
+    print(F'################################ differenze DOM_(ii+1)-DOM_(ii) run{rr}:')
     for ll in range(18-1):
-        print(F'dom {ll:02} ---> {diffinterdom[ll,ii]:.3f}')
+        print(F'dom {ll:02} ---> {diffinterdom[ll,ii]:.3f} +- {errdiffinterdom[ll,ii]:.3f} [ns]')
     
-print('\n making canvases...')
+print('\nmaking canvases...')
 for ggs in [gmeans, gdiffs]:
     cc = TCanvas('cc', 'cc', 1600, 1800)
     cc.SetGrid()
