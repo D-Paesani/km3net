@@ -48,7 +48,7 @@ for ii, rr in enumerate(runs):
     for ll in range(18):
         print(F'dom {ll:02} ---> {fitpars[ll][0]:.3f} +- {fitpars[ll][2]:.3f} [ns]')
     
-    print(F'################################ differenze DOM_(ii+1)-DOM_(ii) run{rr}:')
+    print(F'################################ differenze inter dom for run {tag}:')
     for ll in range(18-1):
         print(F'dom {ll:02} ---> {diffinterdom[ll,ii]:.3f} +- {errdiffinterdom[ll,ii]:.3f} [ns]')
     
