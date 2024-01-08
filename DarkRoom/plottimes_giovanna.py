@@ -51,6 +51,7 @@ for ii, rr in enumerate(runs):
     for ll in range(18-1):
         print(F'dom {ll:02} ---> {diffinterdom[ll,ii]:.3f}')
     
+print('\n making canvases...')
 for ggs in [gmeans, gdiffs]:
     cc = TCanvas('cc', 'cc', 1600, 1800)
     cc.SetGrid()
@@ -63,7 +64,7 @@ for ggs in [gmeans, gdiffs]:
     gStyle.SetOptTitle(0)
     cc.SaveAs(plotout%F'g_{gg.GetName().split("__")[0]}_{runstag}')  
 
-print('\n\n', (plotout%'')[:-4], '\n')
+print('\n', (plotout%'')[:-4], '\n')
 
     
 
