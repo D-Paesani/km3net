@@ -15,6 +15,7 @@ parser.add_argument('--getruns',         type=int,   default=[], nargs='+')
 parser.add_argument('--totven',          type=int,   default=[], nargs='+')
 parser.add_argument('--tottun',          type=int,   default=[], nargs='+')
 parser.add_argument('--laser',           type=int,   default=[], nargs='+')
+parser.add_argument('--autolaser',       type=int,   default=1)
 parser.add_argument('--conftotven',      type=str,   default='VENDOR_L0')
 parser.add_argument('--conftottun',      type=str,   default='TUNED_L0')
 parser.add_argument('--conflaser',       type=str,   default='LASER_PATCHED_PMT08_t73_464_L0__EXAMPLE')
@@ -30,7 +31,8 @@ for ii in ['totven', 'tottun', 'laser']:
     allruns = list(set(allruns)|set(getattr(args, ii)))
 allruns.sort()
 
-if args.autoget: args.getruns = allruns  
+if args.autoget:   args.getruns = allruns  
+if args.autolaser: args.laser = allruns  
 
 for ii in args.getruns:
     print('getting run ', ii)
