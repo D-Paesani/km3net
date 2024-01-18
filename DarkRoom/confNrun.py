@@ -1,4 +1,5 @@
-#add remove symlink and --force flag to rerun
+# daniele.paesani@lns.infn.it
+# add remove symlink and --force flag to rerun
 
 import os
 import argparse
@@ -21,7 +22,7 @@ parser.add_argument('--conftottun',      type=str,   default='TUNED_L0')
 parser.add_argument('--conflaser',       type=str,   default='LASER_PATCHED_PMT08_t73_464_L0__EXAMPLE')
 parser.add_argument('--dorun',           type=int,   default=0)
 parser.add_argument('--cleartot',        type=int,   default=1)
-parser.add_argument('--clearlaser',        type=int,   default=1)
+parser.add_argument('--clearlaser',      type=int,   default=1)
 
 args = parser.parse_args()
 
