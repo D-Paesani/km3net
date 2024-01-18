@@ -20,11 +20,16 @@ parser.add_argument('--conftotven',      type=str,   default='VENDOR_L0')
 parser.add_argument('--conftottun',      type=str,   default='TUNED_L0')
 parser.add_argument('--conflaser',       type=str,   default='LASER_PATCHED_PMT08_t73_464_L0__EXAMPLE')
 parser.add_argument('--dorun',           type=int,   default=0)
+parser.add_argument('--cleartot',        type=int,   default=1)
+parser.add_argument('--clearlaser',        type=int,   default=1)
 
 args = parser.parse_args()
 
-print('loading env')
-os.system('module load jpp/17.0.0-rc.1')
+# print('loading env')
+# os.system('module load jpp/17.0.0-rc.1')
+
+if args.cleartot: os.system('rm ./tot/runs/*.root')
+if args.clearlaser: os.system('rm ./laser/runs/*.root')
     
 allruns = []
 for ii in ['totven', 'tottun', 'laser']:  
