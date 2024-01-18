@@ -2,62 +2,50 @@
 
 import numpy as np
 from ROOT import *
+from pulsarParser import pparser
 
-def FillGraph(gra, x, y, ex, ey):
-    gra.AddPoint(x, y)
-    n = gra.GetN()
-    gra.SetPointError(n-1, ex, ey)
-    return n
-
-def parsefile(infile, runid=None):
-    fpars = np.empty((18,4))
-    fpars[:] = np.nan
-    histos = []
-    
-    runtag = F'{"" if runid==None else F"run{runid}"}'
-    gmeans, gsigmas = TGraphErrors(), TGraphErrors()
-    for ggg, gtitl, ytitl in zip([gmeans, gsigmas], ['means', 'sigmas'], ['mean [ns]', 'sigmas [ns]']):
-        ggg.GetXaxis().SetTitle('DOM #')
-        ggg.SetMarkerStyle(20)
-        ggg.SetTitle(runtag+' '+gtitl)
-        ggg.GetYaxis().SetTitle(ytitl)
-
-    for hidx, ihist in enumerate(infile.GetListOfKeys()):
-        nn = ihist.GetName()
-        if nn in ['h0', 'h1', 'META']: continue
-        nam = F'{"" if runid==None else F"run{runid}_"}dom{nn[6:8]}'
-        num = int(nn[6:8])
-        hh = infile.Get(nn).Clone()
-        hh.SetName(nam)
-        hh.SetTitle(nam)
-        hh.GetXaxis().SetTitle(nam + ' [ns]')
-        histos.append(hh)
-        for ff in hh.GetListOfFunctions():
-            if ff.GetName() != 'f1': continue
-            fpars[num-1] = np.array([ff.GetParameter(1),ff.GetParameter(2),ff.GetParError(1),ff.GetParError(2)])
-            FillGraph(gmeans, num, fpars[num-1,0], 0, fpars[num-1,2])
-            FillGraph(gsigmas, num, fpars[num-1,1], 0, fpars[num-1,3])
-
-    return histos, fpars, (gmeans,gsigmas)     
-
-
-# EXAMPLE ################################################################################################################################################################################################################################################################################################################################################################################
-
-runs = [768,770,785,787,789]
-colorz = [kMagenta, kRed, kBlue, kGreen, kBlack]
+runs = [916, 920, 922, 924, 926]
+trange = (200,240)
+colorz = [kMagenta, kRed, kBlue, kGreen, kBlack, kOrange, ]
 infiles = [TFile(F'../data/KM3NeT_00000168_00000{ii}__LASER_PATCHED_PMT08_t73_464_L0__EXAMPLE.JPulsar.PMT08.root') for ii in runs] 
-plotout = './out/%s.pdf'
+plotout = ['./out/%s.pdf', './out/%s.root']
+plotout = ['/Users/dp/Downloads/%s.root', '/Users/dp/Downloads/%s.pdf']
 
 cc = TCanvas('cc','cc',1600,800)
 cc.cd()
+cc.SetGrid()
 
 for ii, ff in enumerate(infiles):
-    histos, fitpars, graphs = parsefile(ff, runs[ii])
+    histos, fitpars, graphs = pparser.parsefile(ff, runs[ii])
     gmeans, gsigmas = graphs[0], graphs[1]
     gmeans.SetName(F'nn{ii}')
-    gmeans.SetMarkerColor(colorz[ii])
-    gmeans.GetYaxis().SetRangeUser(200,230)      
-    gmeans.DrawClone('AP' if ii == 0 else 'P same')
+    gmeans.SetTitle(gmeans.GetTitle().replace(' means', ''))
+    gmeans.SetMarkerColor(colorz[ii%len(colorz)])
+    gmeans.SetMarkerSize(2)
+    gmeans.SetMarkerSize(3)
+    gmeans.SetMarkerStyle(35)
+    gmeans.GetYaxis().SetLimits(trange[0], trange[1])      
+    gmeans.GetYaxis().SetRangeUser(trange[0], trange[1])      
+    gmeans.SetMinimum(trange[0])
+    gmeans.SetMaximum(trange[1])
+    gmeans.DrawClone('P text ' + ('A' if ii == 0 else 'same'))
+     
+    # print(F'\nRun {runs[ii]} DOM means [ns]:')
+    # for vi, (vx,vy,ex,ey) in enumerate(fitpars):
+    #     print(F'{vx:.2f}')   
     
+    print(F'\nRun {runs[ii]} DOM means [ns]: {np.nanmean(fitpars[:9,0]):.2f} (A) ,  {np.nanmean(fitpars[9:,0]):.2f} (B)')
+    
+# gStyle.SetOptTitle(0)
+pt  = gPad.FindObject("title")
+ptn = TPaveText(pt.GetX1(),pt.GetY1(),pt.GetX2(),pt.GetY2(),'')
+ptn.AddText(F'means {", ".join(str(rrr) for rrr in runs)}')
+ptn.SetBorderSize(0)
+ptn.SetFillColor(0)
+ptn.SetTextFont(42)
+ptn.Draw('same')
+
+print()
 cc.BuildLegend(0.9,0.2,1.0,0.8)
-cc.SaveAs(plotout%F'prova__{"_".join(str(rrr) for rrr in runs)}')  
+for oout in plotout:
+    cc.SaveAs(oout%F'medie__{"_".join(str(rrr) for rrr in runs)}')  
