@@ -24,9 +24,6 @@ parser.add_argument('--clearlaser',      type=int,   default=1)
 
 args = parser.parse_args()
 
-# print('loading env')
-# os.system('module load jpp/17.0.0-rc.1')
-
 if args.cleartot: os.system('rm ./tot/runs/*.root')
 if args.clearlaser: os.system('rm ./laser/runs/*.root')
     
