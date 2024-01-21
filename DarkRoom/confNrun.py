@@ -1,11 +1,9 @@
 # daniele.paesani@lns.infn.it
-# add remove symlink and --force flag to rerun
 
-import os
-import argparse
+import os, argparse
 
 loadenv = 'module load jpp/17.0.0-rc.1'
-runformat = 'KM3NeT_00000168_00000%s.root'
+runformat = 'KM3NeT_00000168_%08d.root'
 getformat = 'rsync -ah --progress /sps/km3net/users/smastroi/caserta/D2DU100CE/KM3NeT_00000168_%08d.root ./runs/'
 getformat = 'rsync -ah --progress /sps/km3net/users/widrissi/file_dark_room_caserta/D2DU100CE/runs/KM3NeT_00000168_%08d.root ./runs/'
 
@@ -49,11 +47,11 @@ if allruns:
         print('creating runlist')
         
         fff.write('\n')
-        fff.writelines([F'\n{runformat%str(ii)} tot     {args.conftotven}'  for ii in    args.totven])
+        fff.writelines([F'\n{runformat%(ii)} tot     {args.conftotven}'  for ii in    args.totven])
         fff.write('\n')
-        fff.writelines([F'\n{runformat%str(ii)} tot     {args.conftottun}'  for ii in    args.tottun])
+        fff.writelines([F'\n{runformat%(ii)} tot     {args.conftottun}'  for ii in    args.tottun])
         fff.write('\n')
-        fff.writelines([F'\n{runformat%str(ii)} laser   {args.conflaser}'   for ii in    args.laser])
+        fff.writelines([F'\n{runformat%(ii)} laser   {args.conflaser}'   for ii in    args.laser])
 
         print('getting runs')
         os.system('sh get_runs.sh')
