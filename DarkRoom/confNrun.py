@@ -42,7 +42,7 @@ for ii in args.getruns:
 if allruns:
     with open('run_list.txt', 'w') as fff:
         print('creating runlist')
-        
+                
         fff.write('\n')
         fff.writelines([F'\n{runformat%(ii)} tot     {args.conftotven}'  for ii in    args.totven])
         fff.write('\n')
