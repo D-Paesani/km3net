@@ -44,11 +44,11 @@ if allruns:
         print('creating runlist')
                 
         fff.write('\n')
-        fff.writelines([F'\n{runformat%(ii)} tot     {args.conftotven}'  for ii in    args.totven])
+        fff.writelines([F'\n{runformat%ii} tot     {args.conftotven}'  for ii in    args.totven])
         fff.write('\n')
-        fff.writelines([F'\n{runformat%(ii)} tot     {args.conftottun}'  for ii in    args.tottun])
+        fff.writelines([F'\n{runformat%ii} tot     {args.conftottun}'  for ii in    args.tottun])
         fff.write('\n')
-        fff.writelines([F'\n{runformat%(ii)} laser   {args.conflaser}'   for ii in    args.laser])
+        fff.writelines([F'\n{runformat%ii} laser   {args.conflaser}'   for ii in    args.laser])
 
         print('getting runs')
         os.system('sh get_runs.sh')
