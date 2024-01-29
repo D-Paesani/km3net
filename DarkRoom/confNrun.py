@@ -18,7 +18,7 @@ parser.add_argument('--autolaser',       type=int,   default=1)
 parser.add_argument('--conftotven',      type=str,   default='VENDOR_L0')
 parser.add_argument('--conftottun',      type=str,   default='TUNED_L0')
 parser.add_argument('--conflaser',       type=str,   default='LASER_PATCHED_PMT08_t73_464_L0__EXAMPLE')
-parser.add_argument('--dorun',           type=int,   default=0)
+parser.add_argument('--dorun',           type=int,   default=1)
 parser.add_argument('--cleartot',        type=int,   default=1)
 parser.add_argument('--clearlaser',      type=int,   default=1)
 
