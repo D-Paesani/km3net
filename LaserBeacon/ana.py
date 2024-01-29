@@ -1,4 +1,6 @@
-#[10, 11, 14, 15, 16, 19, 20, 21, 22, 26]
+# NOTES ################################################################################################################################################################################################################################################################################################################################################################################################
+
+# [10, 11, 14, 15, 16, 19, 20, 21, 22, 26]
 # light vs distance
 # dt vs distance
 # mean time
@@ -6,122 +8,169 @@
 # tres vs npe after subtraction
 # tidff vs npemean
 # why dT binned 1 ns
+# /pbs/home/b/baret/sps/CU
+# /pbs/home/b/baret/sps/data/CU
+# correzione T0
+# aggiungere plot mappa
+# +fit gaus picco all channels
+# prepulse laser
+# inbter dom t peak
+# plot vs radius
+# paired tofs 
+# lobes
+# orientation data
+# add pointing (direction)
 
-from ROOT import *
-from Roottols.Helper import *
-from Roottols.RootHelper import FillGraph, FillGraphAsymmErrrors, MkBranch
-from Roottols.Plotter import *
-from Roottols.Plotter import Tplot as pl, tplotconf as pc
-import Roottols.TreePlotHelper as ph
-from Roottols.Functions import *
-from Roottols.PyRootPlotManager import PyRootPlotManager as rpm
+# push code 
 
+# save as roottople and plot with other macro
+
+# IMPORTS ################################################################################################################################################################################################################################################################################################################################################################################################
+
+import ROOT
+from Roottols.RootHelper import MkBranch, TreeManager
+import Roottols.RootPlotManager as rpm
 import argparse
 import uproot
 import pandas as pd
+import numpy as np
+from tqdm import tqdm
 import itertools
+import sys
 
-def namerdu(nn, add=True): 
-    return ('du' if add else '') + '{:03}'.format(nn)
-def namerdom(nn, add=True): 
-    return ('dom' if add else '') + '{:03}'.format(nn)
-def namerdudom(val, du, dom): 
-    return F'{val}_{namerdu(du)}{namerdom(dom)}'
+# PROCESSORS ################################################################################################################################################################################################################################################################################################################################################################################################
+
 def namerdudomx(val, du): 
-    return F'{val}_{namerdu(du)}dom'
+    return F'{val}_{du:02}_'
 
-def preproc_namer(hb: rpm.hbox):
-    tag1 = F'{hb.GetCurrentIdx()}' if (hb.GetSize() > 1) else ''
-    tag2 =  F' [{hb.GetCurrentIdx()}]' if (hb.GetSize() > 1) else ''
-    hb.SetCurrentName(hb.GetName() + tag1)
+def preproc_namer(hb: rpm.HistBox):
+    tag1 =  F'{hb.GetCurrentIdx():02}' if (hb.GetSize() > 1) else ''
+    tag2 =  F' [{hb.GetCurrentIdx():02}]' if (hb.GetSize() > 1) else ''
+    hb.SetCurrentName(hb.GetName()   + tag1)
     hb.SetCurrentTitle(hb.GetTitle() + tag2)
     
-def proc_skipempty100(hh: rpm.hbox):
-        hh.hSkip = hh.GetCurrentEntries() < 50
+def proc_skip100(hh: rpm.HistBox):
+    hh.SetCurrentSkip(hh.GetCurrentEntries() < 100)
         
-parser = argparse.ArgumentParser(description='quickana')
+# ARGS ################################################################################################################################################################################################################################################################################################################################################################################################
+        
+parser = argparse.ArgumentParser(description='Quick diagnostics for LaserBeacon runs')
 parser.add_argument('--filein',       type=str,   default='../data/prova.root')
 parser.add_argument('--fileout',      type=str,   default=None)
 parser.add_argument('--treename',     type=str,   default='T')
 parser.add_argument('--dus',          type=int,   default=[10, 11, 14, 15, 16, 19, 20, 21, 22, 26], nargs='+')
 parser.add_argument('--beacon',       type=int,   default=2)
 parser.add_argument('--parsedf',      type=int,   default=False)
+parser.add_argument('--sortdf',       type=int,   default=False)
+parser.add_argument('--evlimit',      type=int,   default=-1)
 args = parser.parse_args()
 if args.fileout == None: args.fileout = args.filein.replace('.root', '_ana.root')
+
+# RESHAPE ################################################################################################################################################################################################################################################################################################################################################################################################
 
 if args.parsedf:
     intfile = uproot.open(args.filein)
     intree = intfile[args.treename]
     data = intree.arrays(library='pd')
-    data.rename(columns={'Trigger':'eve', 'Line':'du', 'DOM':'dom', 'PMT':'pmt', 'dT':'dt', 'D1':'d1', 'D2':'d2', 'npe':'npe'}, inplace=True)
-    for ii in ['eve', 'du', 'dom', 'pmt']:
-        data[ii] = data[ii].astype(int)
-    data.sort_values(by=['eve', 'du', 'dom', 'pmt'], inplace=True)
-    for ii in tqdm(range(3)):
-        data = data.groupby(['eve','du','dom'][0:3-ii], sort=False, as_index=0*ii==2)[data.columns].agg(tuple)
+    data.rename(columns={'Trigger':'eve', 'Line':'du', 'DOM':'dom', 'X':'x', 'Y':'y', 'Z':'z', 'D1':'d1', 'D2':'d2', 'PMT':'pmt', 'ToT':'tot', 'npe':'npe', 'dT':'dt'}, inplace=True)
+    for ii in ['eve', 'du', 'dom', 'pmt']: data[ii] = data[ii].astype(int)
+    if args.sortdf: data.sort_values(by=['eve', 'du', 'dom', 'pmt'], inplace=True)
+    ddd = dict()
+    for ii in data.columns: ddd[ii] = 'first'
+    for ii in tqdm(range(3), colour='magenta'):
+        for iii in [['pmt','tot','npe','dt'], ['dom','x','y','z','d1','d2'],['du']][ii]: ddd[iii] = tuple
+        if ii==1:
+            coltargets = ['npesum', 'npesqrtsum', 'npemean', 'tmean'] 
+            colfuns = [
+                       lambda x: np.sum(x.npe), 
+                       lambda x: np.sum(np.sqrt(x.npe)), 
+                       lambda x: np.mean(x.npe),
+                       lambda x: np.sum(x['dt']*np.sqrt(x.npe))/x.npesqrtsum,
+                       ]                
+            for coltarget, colfun in zip(coltargets, colfuns):
+                data[coltarget] = data.apply(colfun, axis=1)
+                ddd[coltarget] = tuple
+        data =  data.groupby(['eve','du','dom'][0:3-ii], sort=False, as_index=0)[data.columns].agg(ddd)
+    print(data.iloc[0])
     data.to_pickle(args.filein.replace('.root', '.pkl'), compression='gzip')
     sys.exit()
-else : 
+else: 
     data = pd.read_pickle(args.filein.replace('.root', '.pkl'), compression='gzip')
+    print(data.iloc[0])
     
+# RANGES ################################################################################################################################################################################################################################################################################################################################################################################################
+     
 duused = len(args.dus)
-dumax = 32
-dommax = 20
-rngq = (480,0,120)
-rngqsmall = (120,0,40)
-rngdom = (20,0,20)
-rangepmt = (32,0,32)
-rngdt = (1000,-1000,1000)
-rngqsum = (1000,0,1000)
-rngtdiff = (200,-50,50) 
-rngy = (500,0,500)
-rngx = (600,-300,300)
-rngr = (600,0,600)
-rngz = (700,0,700)
-rngd = (100,0,600)
+dumax, dommax, pmtmax = 32, 20, 31
+combpmts = [(int(ii),int(iii)) for ii,iii in itertools.combinations(np.arange(0,pmtmax,dtype=int),2)]   
 
-combpmts = [(int(ii),int(iii)) for ii,iii in itertools.combinations(np.arange(0,32,dtype=int),2)]
+ax_q =      ('Q/pe',        480,0,120)
+ax_qsmall = ('Q/pe',        120,0,40)
+ax_dom =    ('DOM ID',      dommax,0,dommax)
+ax_pmt =    ('PMT ID',      dumax,0,dumax)
+ax_dt =     ('dT/ns',       1000,-1000,1000)
+ax_qsum =   ('Qsum/ns',     2000,0,2000)
+ax_tdiff =  ('Tdiff/ns',    200,-50,50) 
+ax_y =      ('Y/m',         500,0,500)
+ax_x =      ('X/m',         600,-300,300)
+ax_r =      ('R/m',         600,0,600)
+ax_z =      ('Z/m',         700,0,700)
+ax_d =      ('D/m',         100,0,600)
+
+# BOOK ################################################################################################################################################################################################################################################################################################################################################################################################
     
-outfile = ROOT.TFile(args.fileout, 'recreate')
-pm = rpm()
-pm.SetOutFile(outfile)
-pm.SetProcessor(rpm.proc_skipempty)
+pm = rpm.PlotManager()
+pm.SetOutFile(ROOT.TFile(args.fileout, 'recreate'))
+pm.SetBoxConf(bPreProc=preproc_namer, bProcessor=rpm.proc_skipempty)
 
-pm.SetOutDir(pm.GetOutFile().mkdir('dist','',True))
-pm.Add(ROOT.TH2F, 'qsumVdist',     axs=(*rngd,*rngqsum),     num=3,      proc=[proc_skipempty100, rpm.proc_profx],  titl='dom qsum vs dist beacon ',  folder=False)
-pm.Add(ROOT.TH2F, 'tmeanVdist',    axs=(*rngd,*rngdt),       num=3,      proc=[proc_skipempty100, rpm.proc_profx],  titl='dom tmean vs dist beacon ',  folder=False)
+pm.SetBoxConf(bOutDir=pm.GetOutFile().mkdir('dist','',True), bPreProc=rpm.preproc_namer, bNum=3, bUseFolder=False)
+pm.Add('map3d',       bType=rpm.H3,     bAxs=ax_x+ax_y+ax_z, bNum=1, bProcessor=[proc_skip100], bTitle='map3d').histos[0].Rebin3D(4,4,4)
+pm.Add('qsumVdist',   bType=rpm.H2,     bAxs=ax_d+ax_qsum,   bProcessor=[proc_skip100, rpm.proc_profx],     bTitle='dom qsum vs dist beacon '    )
+pm.Add('qmeanVdist',  bType=rpm.H2,     bAxs=ax_d+ax_q,      bProcessor=[proc_skip100, rpm.proc_profx],     bTitle='dom qmean vs dist beacon '   )
+pm.Add('tmeanVdist',  bType=rpm.H2,     bAxs=ax_d+ax_dt,     bProcessor=[proc_skip100, rpm.proc_profx],     bTitle='dom tmean vs dist beacon '   )
 
-pm.SetOutDir(pm.GetOutFile().mkdir('du','',True))
-pm.Add(ROOT.TH2F, 'qsumVdom',      axs=(*rngdom,*rngqsum),     num=dumax,      proc=[proc_skipempty100],   titl='qsum vs dom for du =')
-pm.Add(ROOT.TH2F, 'tmeanVdom',     axs=(*rngdom,*rngdt),       num=dumax,      proc=[proc_skipempty100],   titl='tmean vs dom for du =')
-pm.Add(ROOT.TH2F, 'tdiffsVnpe',    axs=(*rngqsmall, *rngtdiff),                proc=[proc_skipempty100],   titl=F'all pair pmt tdiff vs npemean', folder=False)
+pm.SetBoxConf(bOutDir=pm.GetOutFile().mkdir('du','',True), bPreProc=preproc_namer)
+pm.Add('qsumVdom',     bType=rpm.H2,  bAxs=ax_dom+ax_qsum,     bNum=dumax,      bProcessor=[proc_skip100],   bTitle='qsum vs dom for du =')
+pm.Add('tmeanVdom',    bType=rpm.H2,  bAxs=ax_dom+ax_dt,       bNum=dumax,      bProcessor=[proc_skip100],   bTitle='tmean vs dom for du =')
+pm.Add('tdiffsVnpe',   bType=rpm.H2,  bAxs=ax_qsmall+ax_tdiff,                  bProcessor=[proc_skip100],   bTitle='all pair pmt tdiff vs npemean', folder=False)
 
-dusdir = pm.SetOutDir(pm.GetOutFile().mkdir('dus','',True))
+pm.SetBoxConf(bOutDir = (dusdir := pm.GetOutFile().mkdir('dus','',True)), bPreProc=preproc_namer, bNum=dommax, bUseFolders=False)
 for ii in args.dus:
     ttag = F'for du={ii}  dom='          
-    pm.SetUseFolders(0)    
-    pm.Add(ROOT.TH2F, namerdudomx('npeVpmt',ii),    axs=(*rangepmt,*rngq),        num=dommax,     proc=[proc_skipempty100],  dire=dusdir.mkdir('npeVpmt','',True),      titl=F'npe vs pmtid {ttag}')
-    pm.Add(ROOT.TH1F, namerdudomx('npepmt0',ii),    axs=rngq,                     num=dommax,     proc=[proc_skipempty100],  dire=dusdir.mkdir('npepmt0','',True),      titl=F'npe of pmt0 {ttag}')
-    pm.Add(ROOT.TH1F, namerdudomx('dtpmt0',ii),     axs=rngdt,                    num=dommax,     proc=[proc_skipempty100],  dire=dusdir.mkdir('dtpmt0','',True),       titl=F'dt of pmt0 {ttag}')
-    pm.Add(ROOT.TH2F, namerdudomx('dtVpmt',ii),     axs=(*rangepmt,*rngdt),       num=dommax,     proc=[proc_skipempty100],  dire=dusdir.mkdir('dtVpmt','',True),       titl=F'dt vs pmt {ttag}')
-    pm.Add(ROOT.TH2F, namerdudomx('dtVnpe',ii),     axs=(*rngq,*rngdt),           num=dommax,     proc=[proc_skipempty100],  dire=dusdir.mkdir('dtVnpe','',True),       titl=F'dt vs npe {ttag}')
-    pm.Add(ROOT.TH1F, namerdudomx('tdiffs',ii),     axs=rngtdiff,                 num=dommax,     proc=[proc_skipempty100],  dire=dusdir.mkdir('tdiffs','',True),       titl=F'all pair pmt tdiff {ttag}')
-    pm.Add(ROOT.TH2F, namerdudomx('tdiffsVnpe',ii), axs=(*rngqsmall, *rngtdiff),  num=dommax,     proc=[proc_skipempty100],  dire=dusdir.mkdir('tdiffsVnpe','',True),   titl=F'all pair pmt tdiff vs npemean {ttag}')
-    pm.SetUseFolders(1)    
+    pm.Add(namerdudomx('npeVpmt',   ii),        bType=rpm.H2,    bAxs=ax_pmt+ax_q,           bProcessor=[proc_skip100],  bOutDir=dusdir.mkdir('npeVpmt','',True),      bTitle=F'npe vs pmtid {ttag}')
+    pm.Add(namerdudomx('npepmt10',   ii),       bType=rpm.H1,    bAxs=ax_q,                  bProcessor=[proc_skip100],  bOutDir=dusdir.mkdir('npepmt10','',True),     bTitle=F'npe of pmt10 {ttag}')
+    pm.Add(namerdudomx('dtpmt10',    ii),       bType=rpm.H1,    bAxs=ax_dt,                 bProcessor=[proc_skip100],  bOutDir=dusdir.mkdir('dtpmt10','',True),      bTitle=F'dt of pmt10 {ttag}')
+    pm.Add(namerdudomx('dtpmtfirst',ii),        bType=rpm.H1,    bAxs=ax_dt,                 bProcessor=[proc_skip100],  bOutDir=dusdir.mkdir('dtpmtfirst','',True),   bTitle=F'dt of first pmt {ttag}')
+    pm.Add(namerdudomx('dtVpmt',    ii),        bType=rpm.H2,    bAxs=ax_pmt+ax_dt,          bProcessor=[proc_skip100],  bOutDir=dusdir.mkdir('dtVpmt','',True),       bTitle=F'dt vs pmt {ttag}')
+    pm.Add(namerdudomx('dtVnpe',    ii),        bType=rpm.H2,    bAxs=ax_q+ax_dt,            bProcessor=[proc_skip100],  bOutDir=dusdir.mkdir('dtVnpe','',True),       bTitle=F'dt vs npe {ttag}')
+    pm.Add(namerdudomx('tdiffs',    ii),        bType=rpm.H1,    bAxs=ax_tdiff,              bProcessor=[proc_skip100],  bOutDir=dusdir.mkdir('tdiffs','',True),       bTitle=F'all pair pmt tdiff {ttag}')
+    pm.Add(namerdudomx('tdiffsVnpe',ii),        bType=rpm.H2,    bAxs=ax_qsmall+ax_tdiff,    bProcessor=[proc_skip100],  bOutDir=dusdir.mkdir('tdiffsVnpe','',True),   bTitle=F'all pair pmt tdiff vs npemean {ttag}')
+    
+# TREE ################################################################################################################################################################################################################################################################################################################################################################################################ 
+
+treedom = TreeManager('dom', fileout=pm.GetOutFile(), bdic={'eve,dom,du':('i', (1,), None), 'pe,ti':('d', (1,), None), 'di,pos':('d', (3,), None)})
+
+# LOOP ################################################################################################################################################################################################################################################################################################################################################################################################ 
 
 for eve in tqdm(data.itertuples(), total=data.shape[0], colour='blue'):
     
     for idu, du in enumerate(eve.du):
         
+        if not du in args.dus: continue
+        
         for idom, dom in enumerate(eve.dom[idu]):
             
-            pmts = eve.pmt[idu][idom]
-            npes = eve.npe[idu][idom]
-            dts =  eve.dt[idu][idom]
-            domdists = [eve.d1[idu][idom][0], eve.d2[idu][idom][0]]
+            domdists = [eve.d1[idu][idom], eve.d2[idu][idom], 0.0]
+            pmts =      eve.pmt[idu][idom]
+            npes =      eve.npe[idu][idom]
+            dts =       eve.dt[idu][idom]
+            domqsum =   eve.npesum[idu][idom]
+            domqmean =  eve.npemean[idu][idom]
+            domtmean =  eve.tmean[idu][idom]
+            pos =       [getattr(eve, ii)[idu][idom] for ii in 'xyz']
             
-            domqsum, domtmean = 0,0  
-            
+            pm.Fill('map3d', pos[0], pos[1], pos[2])
+                        
             for (ii1,ii2) in combpmts[0:len(pmts)-1]:
                 ttt = dts[ii1]-dts[ii2]
                 qqq = 0.5*(npes[ii1]+npes[ii2])
@@ -130,31 +179,27 @@ for eve in tqdm(data.itertuples(), total=data.shape[0], colour='blue'):
                 pm.Fill('tdiffsVnpe',   qqq,  ttt)    
 
             for ipmt, (pmt,npe,dt) in enumerate(zip(pmts, npes, dts)):
-
-                domqsum += npe
-                domtmean += dt*npe
                 
-                pm.Fill(namerdudomx('npeVpmt',  du),    pmt, npe,   idx=dom)
-                pm.Fill(namerdudomx('dtVpmt',   du),    pmt, dt,    idx=dom)
-                pm.Fill(namerdudomx('npepmt0',  du),         npe,   idx=dom, condition=pmt==0)
-                pm.Fill(namerdudomx('dtVpmt',   du),         dt,    idx=dom, condition=pmt==0)
-                pm.Fill(namerdudomx('dtVpmt',   du),         dt,    idx=dom, condition=pmt==0)
-                pm.Fill(namerdudomx('dtVnpe',   du),    npe, dt,    idx=dom)
+                pm.Fill(namerdudomx('npeVpmt',   du),    pmt, npe,   idx=dom)
+                pm.Fill(namerdudomx('dtVpmt',    du),    pmt, dt,    idx=dom)
+                pm.Fill(namerdudomx('dtVnpe',    du),    npe, dt,    idx=dom)
+                pm.Fill(namerdudomx('npepmt10',  du),         npe,   idx=dom, condition=pmt==10)
+                pm.Fill(namerdudomx('dtpmt10',   du),          dt,   idx=dom, condition=pmt==10)                
                 
-            domtmean *= 1.0/domqsum
+            pm.Fill(namerdudomx('dtpmtfirst',   du),  np.min(dts),   idx=dom)                
             
             pm.Fill('qsumVdom',    dom, domqsum,       idx=du)
             pm.Fill('tmeanVdom',   dom, domtmean,      idx=du)
             
             for ii, dd in enumerate(domdists):
-                pm.Fill('qsumVdist',  dd, domqsum, idx=ii)
+                pm.Fill('qsumVdist',  dd, domqsum,  idx=ii)
+                pm.Fill('qmeanVdist', dd, domqmean, idx=ii)
                 pm.Fill('tmeanVdist', dd, domtmean, idx=ii)
             
+            treedom.dset(dict(eve=eve.eve, dom=dom, du=du, pe=domqsum, ti=domtmean, pos=pos, di=domdists), fill=True)
             
-    
-    
-    
+# TERMINATE ################################################################################################################################################################################################################################################################################################################################################################################################ 
 
-
+treedom.write()
 pm.ProcessBoxes(closefile=True)
 
