@@ -6,7 +6,7 @@ import json
 
 cmdlogfile =  '../mypath/logs/jsccmd.log'
 commandformatdef = 'python2 jsendcommand_dummy.py {ip} {args}' 
-commandformatdef = 'python3 jsendcommand_dummy_3.py {ip} {args}'
+# commandformatdef = 'python3 jsendcommand_dummy_3.py {ip} {args}'
 
 def cmdlogger(cmd, user='?', msg='-', logfile=cmdlogfile, enable=True):
     if not enable: return
