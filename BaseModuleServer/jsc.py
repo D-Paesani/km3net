@@ -4,17 +4,20 @@ import re
 from datetime import datetime
 import json
 
-cmdlogfile =  "./logs/jsccmd.log"
-commandformatdef = 'python2 jsendcommand_dummy.py {ip} {args}'
+cmdlogfile =  '../mypath/logs/jsccmd.log'
+commandformatdef = 'python2 jsendcommand_dummy.py {ip} {args}' 
 commandformatdef = 'python3 jsendcommand_dummy_3.py {ip} {args}'
 
 def cmdlogger(cmd, user='?', msg='-', logfile=cmdlogfile, enable=True):
     if not enable: return
-    with open(logfile, 'a') as outfile:
-        outfile.write('\n')
-        for ii, iii in zip(['TIM','CMD','OPT','USR'],[datetime.utcnow().strftime('%Y/%m/%d %H:%M:%S'),cmd, msg, user]):
-            # outfile.write(F'{" "*4 if ii != "TIM" else "--> "}{ii} = {iii}\n')
-            outfile.write(F'{ii} = {iii}\n')
+    try:
+        with open(logfile, 'a') as outfile:
+            outfile.write('\n')
+            for ii, iii in zip(['TIM','CMD','OPT','USR'],[datetime.utcnow().strftime('%Y/%m/%d %H:%M:%S'),cmd, msg, user]):
+                # outfile.write(F'{" "*4 if ii != "TIM" else "--> "}{ii} = {iii}\n')
+                outfile.write(F'{ii} = {iii}\n')
+    except:
+        print('Error logging')
             
 def parse_sensors(sss, param):
     ss = re.search(F'MON_{param}_VALUE = (.*)', sss).group(1).split(' ')
