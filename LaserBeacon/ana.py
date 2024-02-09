@@ -54,7 +54,7 @@ def proc_skip100(hh: rpm.HistBox):
             
 # ARGS ################################################################################################################################################################################################################################################################################################################################################################################################
         
-parser = argparse.ArgumentParser(description='Quick diagnostics for LaserBeacon runs')
+parser = argparse.ArgumentParser(description='Quick diagnostics for LaserBeacon')
 parser.add_argument('--filein',       type=str,   default='../data/prova.root')
 parser.add_argument('--fileout',      type=str,   default=None)
 parser.add_argument('--treename',     type=str,   default='T')
@@ -85,16 +85,14 @@ if args.parsedf:
     for ii in tqdm(range(3), colour='magenta'):
         for iii in [['pmt','tot','npe','dt'], ['dom','x','y','z','d1','d2'],['du']][ii]: ddd[iii] = tuple
         if ii==1:
-            coltargets = ['npesum', 'npesqrtsum', 'npemean', 'tmean', 'theta', 'phi'] 
-            colfuns = [
-                       lambda x: np.sum(x.npe), 
-                       lambda x: np.sum(np.sqrt(x.npe)), 
-                       lambda x: np.mean(x.npe),
-                       lambda x: np.sum(x['dt']*np.sqrt(x.npe))/x.npesqrtsum,
-                       lambda x: np.sum(pmtangles.iloc[list(x.pmt)].theta * x.npe) / np.sum(x.npe),
-                       lambda x: np.sum(pmtangles.iloc[list(x.pmt)].phi   * x.npe) / np.sum(x.npe),
-                       ]                
-            for coltarget, colfun in zip(coltargets, colfuns):
+            for coltarget, colfun in dict(
+                npesum =        lambda x: np.sum(x.npe), 
+                npemean =       lambda x: np.mean(x.npe),
+                npesqrtsum =    lambda x: np.sum(np.sqrt(x.npe)),
+                tmean =         lambda x: np.sum(x['dt']*np.sqrt(x.npe))/x.npesqrtsum,
+                theta =         lambda x: np.sum(pmtangles.iloc[list(x.pmt)].theta * x.npe) / np.sum(x.npe),
+                phi =           lambda x: np.sum(pmtangles.iloc[list(x.pmt)].phi   * x.npe) / np.sum(x.npe),
+                ).items():
                 data[coltarget] = data.apply(colfun, axis=1)
                 ddd[coltarget] = tuple
         data = data.groupby(['eve','du','dom'][0:3-ii], sort=False, as_index=0)[data.columns].agg(ddd)
