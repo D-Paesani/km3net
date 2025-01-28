@@ -2,7 +2,7 @@
 
 DU="114"
 DUDU="0"
-SSH_PASS='CCA!xxxx'
+SSH_PASS='xxx'
 
 cmd1="cd /sps/km3net/users/xxx/Process3/D${DUDU}DU${DU}CT/"
 cmd2="module load jpp/18.5.0"
